@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DmxDip</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="dip_sw_1">1</string>
+    <string name="dip_sw_2">2</string>
+    <string name="dip_sw_3">3</string>
+    <string name="dip_sw_4">4</string>
+    <string name="dip_sw_5">5</string>
+    <string name="dip_sw_6">6</string>
+    <string name="dip_sw_7">7</string>
+    <string name="dip_sw_8">8</string>
+    <string name="dip_sw_9">9</string>
+    
+    <string name="dip_addr_1">1</string>
+    <string name="dip_addr_2">2</string>
+    <string name="dip_addr_3">4</string>
+    <string name="dip_addr_4">8</string>
+    <string name="dip_addr_5">16</string>
+    <string name="dip_addr_6">32</string>
+    <string name="dip_addr_7">64</string>
+    <string name="dip_addr_8">128</string>
+    <string name="dip_addr_9">256</string>
+    <string name="hint_start">DMX</string>
+    <string name="hint_span">CH.</string>
+    <string name="hint_clear">Clear</string>
+    
+    <string name="share">Share</string>
+</resources>
