@@ -5,9 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
@@ -17,8 +18,8 @@ import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.HapticFeedbackConstants;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -42,6 +43,7 @@ public class MainActivity extends Activity
 	private Vibrator vib;
 	private ShareActionProvider mShareActionProvider;
 	private FileOutputStream fileOS;
+	private Build.VERSION version;
 	
 	// Constants
 	private final int ADDRESS_BUTTONS = 9;
@@ -109,17 +111,24 @@ public class MainActivity extends Activity
 		clearButton.setOnClickListener(this);		
 	}
 
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 
+		if (version.SDK_INT >= 14) {
+		MenuItem shareMenuItem = menu.add("Share");
+		ShareActionProvider shareProvider = new ShareActionProvider(this);
+		shareMenuItem.setActionProvider(shareProvider);
 		// Share Provider
-		mShareActionProvider = (ShareActionProvider) menu.findItem(R.id.menu_share).getActionProvider();
+		//mShareActionProvider = (ShareActionProvider) menu.findItem(shareMenuItem).getActionProvider();
 		
+		mShareActionProvider = (ShareActionProvider) shareMenuItem.getActionProvider();
 		// Set default share intent
 		mShareActionProvider.setShareIntent(createShareIntent());
+		}
 		
 
 		return true;
