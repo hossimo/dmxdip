@@ -18,11 +18,13 @@ import android.view.LayoutInflater;
 	private ArrayList<Integer> mStart;
 	private final Context mContext;
 	private Typeface tf;
+	private TextView tva[];
 	
 	public DMXAdapter(Context context, ArrayList<Integer> addressArray){
 		mContext=context;
 		mStart = addressArray;
 		tf = Typeface.createFromAsset(context.getAssets(), "fonts/RobotoSlab-Regular.ttf");
+		tva = new TextView[9];
 	}
 
 	@Override
@@ -51,8 +53,8 @@ import android.view.LayoutInflater;
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View rowView = inflater.inflate(R.layout.dmx_adapter_layout, parent, false);
 		TextView tv = (TextView) rowView.findViewById(R.id.textView1);
-		TextView tva[];
-		tva = new TextView[9];
+		//TextView tva[];
+		//tva = new TextView[9];
 		tva[0] = (TextView) rowView.findViewById(R.id.ToggleButton01);		
 		tva[1] = (TextView) rowView.findViewById(R.id.ToggleButton02);		
 		tva[2] = (TextView) rowView.findViewById(R.id.ToggleButton03);		

@@ -60,6 +60,7 @@ public class MainActivity extends Activity
 		Log.v("FileLocation", getFilesDir().toString());
 		
 		// Load the main activity
+		setTheme(android.R.style.Theme_Holo);
 		setContentView(R.layout.activity_main);
 		
 		//Load Resources
