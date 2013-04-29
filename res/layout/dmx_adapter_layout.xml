@@ -46,7 +46,7 @@
                  android:clickable="false"
                  android:minHeight="0dp"
                  android:minWidth="0dp"
-                 android:text="@string/dip_sw_1"
+                 android:text="@string/dip_sw_2"
                  android:textColor="@android:color/white"
                  android:textIsSelectable="false"
                  android:textSize="30sp" />
@@ -62,7 +62,7 @@
                  android:clickable="false"
                  android:minHeight="0dp"
                  android:minWidth="0dp"
-                 android:text="@string/dip_sw_1"
+                 android:text="@string/dip_sw_3"
                  android:textColor="@android:color/white"
                  android:textIsSelectable="false"
                  android:textSize="30sp" />
@@ -78,7 +78,7 @@
                  android:clickable="false"
                  android:minHeight="0dp"
                  android:minWidth="0dp"
-                 android:text="@string/dip_sw_1"
+                 android:text="@string/dip_sw_4"
                  android:textColor="@android:color/white"
                  android:textIsSelectable="false"
                  android:textSize="30sp" />
@@ -94,7 +94,7 @@
                  android:clickable="false"
                  android:minHeight="0dp"
                  android:minWidth="0dp"
-                 android:text="@string/dip_sw_1"
+                 android:text="@string/dip_sw_5"
                  android:textColor="@android:color/white"
                  android:textIsSelectable="false"
                  android:textSize="30sp" />
@@ -110,7 +110,7 @@
                  android:clickable="false"
                  android:minHeight="0dp"
                  android:minWidth="0dp"
-                 android:text="@string/dip_sw_1"
+                 android:text="@string/dip_sw_6"
                  android:textColor="@android:color/white"
                  android:textIsSelectable="false"
                  android:textSize="30sp" />
@@ -126,7 +126,7 @@
                  android:clickable="false"
                  android:minHeight="0dp"
                  android:minWidth="0dp"
-                 android:text="@string/dip_sw_1"
+                 android:text="@string/dip_sw_7"
                  android:textColor="@android:color/white"
                  android:textIsSelectable="false"
                  android:textSize="30sp" />
@@ -142,7 +142,7 @@
                  android:clickable="false"
                  android:minHeight="0dp"
                  android:minWidth="0dp"
-                 android:text="@string/dip_sw_1"
+                 android:text="@string/dip_sw_8"
                  android:textColor="@android:color/white"
                  android:textIsSelectable="false"
                  android:textSize="30sp" />
@@ -158,7 +158,7 @@
                  android:clickable="false"
                  android:minHeight="0dp"
                  android:minWidth="0dp"
-                 android:text="@string/dip_sw_1"
+                 android:text="@string/dip_sw_9"
                  android:textColor="@android:color/white"
                  android:textIsSelectable="false"
                  android:textSize="30sp" />
