@@ -14,7 +14,10 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.view.LayoutInflater;
 
-@SuppressLint("NewApi") public class DMXAdapter extends BaseAdapter {
+//TODO: Suppressing NewApi for a call to setBackground >= 16 need to make a default
+// perhaps set color?
+@SuppressLint("NewApi")
+public class DMXAdapter extends BaseAdapter {
 	private ArrayList<Integer> mStart;
 	private final Context mContext;
 	private Typeface tf;
