@@ -1,9 +1,11 @@
 package com.downrighttech.dmxdip;
 
 import java.util.ArrayList;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build.VERSION;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.view.LayoutInflater;
 
-public class DMXAdapter extends BaseAdapter {
+@SuppressLint("NewApi") public class DMXAdapter extends BaseAdapter {
 	private ArrayList<Integer> mStart;
 	private final Context mContext;
 	private Typeface tf;
@@ -49,17 +51,17 @@ public class DMXAdapter extends BaseAdapter {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View rowView = inflater.inflate(R.layout.dmx_adapter_layout, parent, false);
 		TextView tv = (TextView) rowView.findViewById(R.id.textView1);
-		ToggleButton tva[];
-		tva = new ToggleButton[9];
-		tva[0] = (ToggleButton) rowView.findViewById(R.id.ToggleButton01);		
-		tva[1] = (ToggleButton) rowView.findViewById(R.id.ToggleButton02);		
-		tva[2] = (ToggleButton) rowView.findViewById(R.id.ToggleButton03);		
-		tva[3] = (ToggleButton) rowView.findViewById(R.id.ToggleButton04);		
-		tva[4] = (ToggleButton) rowView.findViewById(R.id.ToggleButton05);		
-		tva[5] = (ToggleButton) rowView.findViewById(R.id.ToggleButton06);		
-		tva[6] = (ToggleButton) rowView.findViewById(R.id.ToggleButton07);		
-		tva[7] = (ToggleButton) rowView.findViewById(R.id.ToggleButton08);		
-		tva[8] = (ToggleButton) rowView.findViewById(R.id.ToggleButton09);		
+		TextView tva[];
+		tva = new TextView[9];
+		tva[0] = (TextView) rowView.findViewById(R.id.ToggleButton01);		
+		tva[1] = (TextView) rowView.findViewById(R.id.ToggleButton02);		
+		tva[2] = (TextView) rowView.findViewById(R.id.ToggleButton03);		
+		tva[3] = (TextView) rowView.findViewById(R.id.ToggleButton04);		
+		tva[4] = (TextView) rowView.findViewById(R.id.ToggleButton05);		
+		tva[5] = (TextView) rowView.findViewById(R.id.ToggleButton06);		
+		tva[6] = (TextView) rowView.findViewById(R.id.ToggleButton07);		
+		tva[7] = (TextView) rowView.findViewById(R.id.ToggleButton08);		
+		tva[8] = (TextView) rowView.findViewById(R.id.ToggleButton09);		
 		
 		//String bin = Integer.toBinaryString(mStart.get(index));
 		String bin = swapBin(mStart.get(index), 9);
@@ -77,9 +79,11 @@ public class DMXAdapter extends BaseAdapter {
 		for (int i = 0 ; i < bin.length() ; i++){
 			test = bin.charAt(i);
 			if (test =='1')
-				tva[i].setBackgroundDrawable(button_on);
+				if (VERSION.SDK_INT >= 16)
+					tva[i].setBackground(button_on);
 			else
-				tva[i].setBackgroundDrawable(button_off);
+				if (VERSION.SDK_INT >= 16)
+					tva[i].setBackground(button_off);
 		}
 
 		tv.setTypeface(tf);
