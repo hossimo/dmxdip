@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.annotation.TargetApi;
@@ -43,7 +44,6 @@ public class MainActivity extends Activity
 	private Vibrator vib;
 	private ShareActionProvider mShareActionProvider;
 	private FileOutputStream fileOS;
-	private Build.VERSION version;
 	
 	// Constants
 	private final int ADDRESS_BUTTONS = 9;
@@ -118,7 +118,7 @@ public class MainActivity extends Activity
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 
-		if (version.SDK_INT >= 14) {
+		if (VERSION.SDK_INT >= 14) {
 		MenuItem shareMenuItem = menu.add("Share");
 		ShareActionProvider shareProvider = new ShareActionProvider(this);
 		shareMenuItem.setActionProvider(shareProvider);
