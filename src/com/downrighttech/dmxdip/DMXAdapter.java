@@ -1,19 +1,13 @@
 package com.downrighttech.dmxdip;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
-
-import android.app.ActionBar.LayoutParams;
 import android.content.Context;
-import android.drm.DrmStore.RightsStatus;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.view.LayoutInflater;
