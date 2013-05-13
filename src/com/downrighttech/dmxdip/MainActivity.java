@@ -9,11 +9,13 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
@@ -44,6 +46,7 @@ public class MainActivity extends Activity
 	private Vibrator vib;
 	private ShareActionProvider mShareActionProvider;
 	private FileOutputStream fileOS;
+	private Boolean mClearPressed = false;
 	
 	// Constants
 	private final int ADDRESS_BUTTONS = 9;
@@ -58,10 +61,14 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		//debug stuff
 		Log.v("FileLocation", getFilesDir().toString());
-		
+		//Log.v("prefTheme", Integer.toString(prefTheme));
 		// Load the main activity
 		setTheme(android.R.style.Theme_Holo);
 		setContentView(R.layout.activity_main);
+
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		int prefTheme = sharedPref.getInt(SettingsActivity.KEY_PREF_THEME, 0);
+
 		
 		//Load Resources
 		button_on = getResources().getDrawable(R.drawable.buttons_on_30x30);
@@ -135,6 +142,20 @@ public class MainActivity extends Activity
 		return true;
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId()){
+		case R.id.imageButton:
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
+			finish();
+			return true;
+		}
+		return false;
+		
+	}
+	
 	private String swapBin (int input, int length) {
 		String bin = Integer.toBinaryString(input);
 		String output = new StringBuffer(bin).reverse().toString();
@@ -176,7 +197,9 @@ public class MainActivity extends Activity
 		switch (v.getId()){
 		case R.id.imageButton:				//Clear Button
 			vib.vibrate(VIB_TIME);
+			mClearPressed=true;				// don't build chart twice on clear.
 			editText_Start.setText("");
+			mClearPressed=false;
 			editText_Span.setText("");
 			break;
 		case R.id.ToggleButton01:
@@ -215,7 +238,8 @@ public class MainActivity extends Activity
 	public void afterTextChanged(Editable s) {
 		int start = 0;
 		int span = 1;
-	
+		if (mClearPressed)
+			return;
 		// Check Start has a length
 		if (editText_Start.getText().length() != 0) {
 			//if greater the 511 make it 511
@@ -273,36 +297,36 @@ public class MainActivity extends Activity
 		//Clear the list
 		addressList.clear();
 		
-		//FileStream
-		try {
-			fileOS = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		try {
-			fileOS.write("<pre>\n".getBytes());
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//		//FileStream
+//		try {
+//			fileOS = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//		try {
+//			fileOS.write("<pre>\n".getBytes());
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 		Log.v("buildChart","---"+start+"."+span+"---");
 		for (int i=start ; i<512 ; i=i+span){
 			addressList.add(i);
-			try {
-				fileOS.write((i+" : "+swapBin(i, 9)+"\n").getBytes());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				fileOS.write((i+" : "+swapBin(i, 9)+"\n").getBytes());
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
-		try {
-			fileOS.write("</pre>\n".getBytes());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			fileOS.write("</pre>\n".getBytes());
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		arrayAdapter.notifyDataSetChanged();
 		
 	}

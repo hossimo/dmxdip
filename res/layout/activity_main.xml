@@ -172,7 +172,6 @@
             android:inputType="number"
             android:lines="1"
             android:maxLength="3"
-            android:textColorLink="@android:color/holo_red_dark"
             android:textSize="30sp"
             android:typeface="monospace" >
 

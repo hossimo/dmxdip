@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 import android.view.LayoutInflater;
 
 //TODO: Suppressing NewApi for a call to setBackground >= 16 need to make a default

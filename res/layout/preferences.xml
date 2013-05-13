@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<CheckBoxPreference
+	    android:key="pref_offset"
+	    android:title="@string/pref_offset"
+	    android:summary="@string/pref_offset_summary"
+	    android:defaultValue="false"/>
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/pref_vib_list_titles"
+        android:entryValues="@array/pref_vib_list_values"
+        android:key="pref_vib"
+	    android:summary="@string/pref_vib_summary"
+        android:title="@string/pref_vib"/>
+	
+	<ListPreference
+        android:defaultValue="0"
+        android:entries="@array/pref_addr_list_titles"
+        android:entryValues="@array/pref_addr_list_values"
+        android:key="pref_addr"
+	    android:summary="@string/pref_addr_summary"
+        android:title="@string/pref_addr"/>
+	
+	<ListPreference
+        android:defaultValue="0"
+        android:entries="@array/pref_theme_list_titles"
+        android:entryValues="@array/pref_theme_list_values"
+        android:key="pref_theme"
+	    android:summary="@string/pref_theme_summary"
+        android:title="@string/pref_theme"/>
+			
+</PreferenceScreen>
