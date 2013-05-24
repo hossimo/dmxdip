@@ -272,11 +272,16 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.v("lifeCycle", "onOptionsItemSelected");
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.menuSettings:
-                Intent intent = new Intent(this, SettingsActivity.class);
+                intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 return true;
+//            case R.id.menuAbout:
+//                intent = new Intent(this, AboutActivity.class);
+//                startActivity(intent);
+//                return true;
         }
         return false;
     }

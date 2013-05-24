@@ -41,6 +41,27 @@
 
     <string name="pref_addr">Address Display</string>
     <string name="pref_addr_summary">Display Switch or Address Values</string>
+    <string name="string_version">1.2</string>
+    <string name="about_new">Whats New</string>
+    <string name="about_new_details">
+        <b>➣</b>
+        Table based dip switch results\n
+        <b>➣</b>
+        Channel count or span\n
+        <b>➣</b>
+        Reverse lookup using top switches\n
+        <b>➣</b>
+        Light and Dark themes (3.0+)
+    </string>
+    <string name="about_soon">Coming soon</string>
+    <string name="about_soon_details">
+        <b>➣</b>
+        Share your settings via Email\n
+        <b>➣</b>
+        Fix themes in older android os
+    </string>
+    <string name="follow_us">Follow us on Google Plus</string>
+    <string name="action_about">About</string>
 
 
     <!-- Strings related to Settings -->
