@@ -80,14 +80,11 @@ public class DMXAdapter extends BaseAdapter {
             mHolder.button_off = mContext.getResources().getDrawable(R.drawable.buttons_half_off_30x30);
 
             convertView.setTag(mHolder);
-        } else {
-            Log.v("DMXAdapter", "convertView was reused! - " + convertView.getTag().toString());
+        } else
             mHolder = (ViewHolder) convertView.getTag();
-        }
 
         String bin = swapBin(mStart.get(index), 9);
 
-        Log.v("DMXAdapter", mHolder.address.getTextSize() + "/" + mHolder.address.getMaxEms());
         mHolder.address.setTypeface(tf);
         //
         mHolder.address.setGravity(Gravity.RIGHT);
@@ -108,7 +105,6 @@ public class DMXAdapter extends BaseAdapter {
                     mHolder.tva[i].setBackgroundDrawable(mHolder.button_off);
             }
         }
-        Log.v("DMXAdapter", mHolder.address.getTextSize() + "/" + mHolder.address.getMaxEms());
         return convertView;
     }
 
