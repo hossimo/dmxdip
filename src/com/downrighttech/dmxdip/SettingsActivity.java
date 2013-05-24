@@ -5,6 +5,8 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.*;
+import android.util.Log;
+import android.view.MenuItem;
 
 public class SettingsActivity extends PreferenceActivity {
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
@@ -83,10 +85,6 @@ public class SettingsActivity extends PreferenceActivity {
                 // the preference's 'entries' list.
                 ListPreference listPreference = (ListPreference) preference;
 
-                //if listPreference is Theme
-                if (listPreference.getDialogTitle() == "Theme") {
-                }
-
                 int index = listPreference.findIndexOfValue(stringValue);
                 // Set the summary to reflect the new value.
                 if (index >= 0)
@@ -125,4 +123,14 @@ public class SettingsActivity extends PreferenceActivity {
                         ""));
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.v("Selected", item.toString());
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return (true);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

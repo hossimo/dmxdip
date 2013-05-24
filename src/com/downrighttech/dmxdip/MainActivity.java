@@ -1,3 +1,18 @@
+//  Copyright 2013 Down Right Tehcnical
+//
+//        Licensed under the Apache License, Version 2.0 (the "License");
+//        you may not use this file except in compliance with the License.
+//        You may obtain a copy of the License at
+//
+//        http://www.apache.org/licenses/LICENSE-2.0
+//
+//        Unless required by applicable law or agreed to in writing, software
+//        distributed under the License is distributed on an "AS IS" BASIS,
+//        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//        See the License for the specific language governing permissions and
+//        limitations under the License.
+
+
 package com.downrighttech.dmxdip;
 
 import android.annotation.TargetApi;
@@ -11,7 +26,6 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,8 +36,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
-import java.io.FileOutputStream;
 import java.util.ArrayList;
+
+//import android.preference.Preference;
+//import java.io.FileOutputStream;
 
 //import java.io.FileNotFoundException;
 //import java.io.IOException;
@@ -31,30 +47,34 @@ import java.util.ArrayList;
 //import android.preference.PreferenceManager;
 
 
-public class MainActivity extends Activity
-        implements OnClickListener, TextWatcher {
-
+public class MainActivity extends Activity implements OnClickListener, TextWatcher {
     private EditText editText_Start;
     private EditText editText_Span;
     private ImageButton clearButton;
     private ToggleButton[] toggleButton;
+    private ListView listView;
     private ArrayList<Integer> addressList;
     private DMXAdapter arrayAdapter;
     private Drawable button_on;
     private Drawable button_off;
     private Vibrator vib;
     private ShareActionProvider mShareActionProvider;
-    //private FileOutputStream fileOS;
     private Boolean mClearPressed;
     private SharedPreferences sharedPreferences;
-    //private Preference preference;
     private int mCurrentTheme;
+
+    //private FileOutputStream fileOS;
+    //private Preference preference;
 
 
     // Constants
     private final int ADDRESS_BUTTONS = 9;
     private int VIB_TIME = 10;
-    private final String FILENAME = "share_text.txt";
+    private final String FILENAME = "AndroDip.html";
+
+    //TODO: Delete share_text.txt if exists
+
+    // TODO: Make this a fragment?
     private final int BUTTON_TEXT_ADDR[] = {
             R.string.dip_addr_1,
             R.string.dip_addr_2,
@@ -65,7 +85,6 @@ public class MainActivity extends Activity
             R.string.dip_addr_7,
             R.string.dip_addr_8,
             R.string.dip_addr_9};
-
     private final int BUTTON_TEXT_SW[] = {
             R.string.dip_sw_1,
             R.string.dip_sw_2,
@@ -80,7 +99,6 @@ public class MainActivity extends Activity
     public MainActivity() {
         mClearPressed = false;
     }
-
 
     //@SuppressWarnings("unused")
     @Override
@@ -106,6 +124,7 @@ public class MainActivity extends Activity
         else
             mCurrentTheme = android.R.style.Theme_Holo;
 
+
         setTheme(mCurrentTheme);
 
         setContentView(R.layout.activity_main);
@@ -129,7 +148,7 @@ public class MainActivity extends Activity
         toggleButton[6] = (ToggleButton) findViewById(R.id.ToggleButton07);
         toggleButton[7] = (ToggleButton) findViewById(R.id.ToggleButton08);
         toggleButton[8] = (ToggleButton) findViewById(R.id.ToggleButton09);
-        ListView listView = (ListView) findViewById(R.id.listView1);
+        listView = (ListView) findViewById(R.id.listView1);
 
         //Load Button Text
         //TODO: Finish this!
@@ -176,6 +195,13 @@ public class MainActivity extends Activity
         editText_Start.addTextChangedListener(this);
         editText_Span.addTextChangedListener(this);
         clearButton.setOnClickListener(this);
+
+        int pref_start = sharedPreferences.getInt("pref_start", 0);
+        int pref_span = sharedPreferences.getInt("pref_span", 1);
+        editText_Start.setText(Integer.toString(pref_start));
+        editText_Span.setText(Integer.toString(pref_span));
+        this.updateButtons(pref_start);
+        this.buildChart(pref_start, pref_span);
     }
 
     @Override
@@ -267,11 +293,11 @@ public class MainActivity extends Activity
         int count = addressList.size();
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
+        shareIntent.setType("text/html");
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 
         //Some Data
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "DMX for android");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "DMXdip for android");
 
         if (count > 0) {
 
@@ -366,6 +392,11 @@ public class MainActivity extends Activity
         Log.v("input", "start.count:" + start + "." + span);
         this.updateButtons(start);
         this.buildChart(start, span);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("pref_start", start);
+        editor.putInt("pref_span", span);
+        editor.commit();
+
     }
 
     @Override
@@ -428,6 +459,7 @@ public class MainActivity extends Activity
 //			e.printStackTrace();
 //		}
         arrayAdapter.notifyDataSetChanged();
+        listView.smoothScrollToPosition(0);
 
     }
 

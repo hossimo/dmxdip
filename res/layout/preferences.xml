@@ -23,6 +23,7 @@
             android:title="@string/pref_addr"/>
 
     <ListPreference
+            android:id="@+id/settingsTheme"
             android:defaultValue="0"
             android:entries="@array/pref_theme_list_titles"
             android:entryValues="@array/pref_theme_list_values"
