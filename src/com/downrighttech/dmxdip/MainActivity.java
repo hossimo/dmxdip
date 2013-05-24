@@ -196,10 +196,18 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
         editText_Span.addTextChangedListener(this);
         clearButton.setOnClickListener(this);
 
-        int pref_start = sharedPreferences.getInt("pref_start", 0);
-        int pref_span = sharedPreferences.getInt("pref_span", 1);
-        editText_Start.setText(Integer.toString(pref_start));
-        editText_Span.setText(Integer.toString(pref_span));
+        int pref_start = sharedPreferences.getInt("pref_start", -1);
+        int pref_span = sharedPreferences.getInt("pref_span", -1);
+        if ((pref_span == -1) || (pref_span == 1))
+            editText_Span.setText("");
+        else
+            editText_Span.setText(Integer.toString(pref_span));
+
+        if ((pref_start == -1) || (pref_start == 0))
+            editText_Start.clearComposingText();
+        else
+            editText_Start.setText(Integer.toString(pref_start));
+
         this.updateButtons(pref_start);
         this.buildChart(pref_start, pref_span);
     }
