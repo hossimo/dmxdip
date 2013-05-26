@@ -1,4 +1,4 @@
-//  Copyright 2013 Down Right Tehcnical
+//  Copyright 2013 Down Right Technical
 //
 //        Licensed under the Apache License, Version 2.0 (the "License");
 //        you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import java.util.ArrayList;
@@ -43,7 +44,8 @@ import java.util.ArrayList;
 
 //import java.io.FileNotFoundException;
 //import java.io.IOException;
-//import android.content.Context;
+import android.content.Context;
+import android.view.WindowManager;
 //import android.preference.PreferenceManager;
 
 
@@ -195,6 +197,13 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
         editText_Start.addTextChangedListener(this);
         editText_Span.addTextChangedListener(this);
         clearButton.setOnClickListener(this);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
+            }
+        });
 
         int pref_start = sharedPreferences.getInt("pref_start", -1);
         int pref_span = sharedPreferences.getInt("pref_span", -1);
