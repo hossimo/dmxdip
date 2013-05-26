@@ -321,10 +321,6 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
         //Some Data
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, "DMXdip for android");
 
-        if (count > 0) {
-
-        }
-
         String str;
         str = "Count: " + count + "\n";
         for (int i = 0; i < count; i++) {
@@ -481,57 +477,6 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
 //			e.printStackTrace();
 //		}
         arrayAdapter.notifyDataSetChanged();
-        listView.smoothScrollToPosition(0);
-
-    }
-
-    // DEBUG LIFE CYCLE STUFF
-    @Override
-    protected void onRestart() {
-        Log.v("lifeCycle", "onRestart");
-        super.onRestart();
-    }
-
-    @Override
-    protected void onResume() {
-        Log.v("lifeCycle", "onResume");
-        super.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.v("lifeCycle", "onDestroy");
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onStop() {
-        Log.v("lifeCycle", "onStop");
-        super.onStop();
-    }
-
-    @Override
-    protected void onPostResume() {
-        Log.v("lifeCycle", "onPostResume");
-        super.onPostResume();
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        if (savedInstanceState != null)
-            Log.v("lifeCycle", "onPostCreate-" + savedInstanceState.toString());
-        super.onPostCreate(savedInstanceState);
-    }
-
-    @Override
-    public boolean onNavigateUp() {
-        Log.v("lifeCycle", "onNavigationUp");
-        return super.onNavigateUp();
-    }
-
-    @Override
-    public void onBackPressed() {
-        Log.v("lifeCycle", "onBackPressed");
-        super.onBackPressed();
+        listView.setSelection(0);
     }
 }
