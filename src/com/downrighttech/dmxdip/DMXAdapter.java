@@ -27,17 +27,29 @@ public class DMXAdapter extends BaseAdapter {
     private Typeface tf;
     private SharedPreferences mSharedPreferences;
     private ViewHolder mHolder;
+    private String pref_addr;
+    private String pref_offset2;
+    private boolean mOffset;
 
     public DMXAdapter(Context context, ArrayList<Integer> addressArray) {
         mContext = context;
         mStart = addressArray;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/RobotoSlab-Regular.ttf");
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        pref_addr = mSharedPreferences.getString("pref_addr", "0");
+        pref_offset2 = mSharedPreferences.getString("pref_offset2", "0");
+        mOffset = false;
+
     }
 
     @Override
     public int getCount() {
         return mStart.size();
+    }
+
+    public void setOffset(boolean offset) {
+        mOffset = offset;
+        Log.v("setOffset", Boolean.toString(offset));
     }
 
     @Override
@@ -54,10 +66,7 @@ public class DMXAdapter extends BaseAdapter {
     public View getView(int index, View convertView, ViewGroup parent) {
 
         mHolder = new ViewHolder();
-        String pref_addr = mSharedPreferences.getString("pref_addr", "0");
-
         if (convertView == null) {
-            Log.v("DMXAdapter", "convertView was NULL!");
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (pref_addr.equals("0"))
                 convertView = inflater.inflate(R.layout.dmx_adapter_layout, null);
@@ -83,7 +92,13 @@ public class DMXAdapter extends BaseAdapter {
         } else
             mHolder = (ViewHolder) convertView.getTag();
 
-        String bin = swapBin(mStart.get(index), 9);
+        int start;
+        if (mOffset) {
+            start = mStart.get(index) - 1;      //DMX 1 = Switch 1 ON
+        } else {
+            start = mStart.get(index);   //DMX 1 = All Switches OFF
+        }
+        String bin = swapBin(start, 9);
 
         mHolder.address.setTypeface(tf);
         //
@@ -91,7 +106,7 @@ public class DMXAdapter extends BaseAdapter {
         mHolder.address.setText(String.format("%3s", mStart.get(index)) + ":");
 
         char test;
-        for (int i = 0; i < bin.length(); i++) {
+        for (int i = 0; i < 9; i++) {
             test = bin.charAt(i);
             if (test == '1') {
                 if (VERSION.SDK_INT >= 16)

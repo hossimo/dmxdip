@@ -11,11 +11,6 @@ import android.view.MenuItem;
 public class SettingsActivity extends PreferenceActivity {
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
-    public static final String KEY_PREF_VIB = "pref_vib";
-    public static final String KEY_PREF_ADDR = "pref_addr";
-    public static final String KEY_PREF_THEME = "pref_theme";
-
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -36,6 +31,7 @@ public class SettingsActivity extends PreferenceActivity {
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
+        bindPreferenceSummaryToValue(findPreference("pref_offset2"));
         bindPreferenceSummaryToValue(findPreference("pref_vib"));
         bindPreferenceSummaryToValue(findPreference("pref_addr"));
         bindPreferenceSummaryToValue(findPreference("pref_theme"));

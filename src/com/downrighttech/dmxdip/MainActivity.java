@@ -38,15 +38,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import java.util.ArrayList;
-
 //import android.preference.Preference;
 //import java.io.FileOutputStream;
-
 //import java.io.FileNotFoundException;
 //import java.io.IOException;
-import android.content.Context;
-import android.view.WindowManager;
 //import android.preference.PreferenceManager;
+import android.content.Context;
 
 
 public class MainActivity extends Activity implements OnClickListener, TextWatcher {
@@ -61,9 +58,11 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
     private Drawable button_off;
     private Vibrator vib;
     private ShareActionProvider mShareActionProvider;
-    private Boolean mClearPressed;
+    private Boolean mSkipProcess;
     private SharedPreferences sharedPreferences;
     private int mCurrentTheme;
+    private int mLastAddress;
+    private boolean mOffset;
 
     //private FileOutputStream fileOS;
     //private Preference preference;
@@ -71,6 +70,7 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
 
     // Constants
     private final int ADDRESS_BUTTONS = 9;
+    private final int mFirstAddress = 1;
     private int VIB_TIME = 10;
     private final String FILENAME = "AndroDip.html";
 
@@ -99,34 +99,21 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
             R.string.dip_sw_9};
 
     public MainActivity() {
-        mClearPressed = false;
+        mSkipProcess = true;
     }
 
     //@SuppressWarnings("unused")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Log.v("lifeCycle","onCreate-"+savedInstanceState.toString());
-        Log.v("lifeCycle", "onCreate");
         // load preferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Load Theme from preferences
-        String pref_vib = sharedPreferences.getString("pref_vib", "0");
-        if (pref_vib.equals("0"))
-            VIB_TIME = 10;
-        else if (pref_vib.equals("1"))
-            VIB_TIME = 30;
-        else if (pref_vib.equals("2"))
-            VIB_TIME = 90;
-
-        String pref_theme = sharedPreferences.getString("pref_theme", "0");
-        if (pref_theme.equals("0"))
+        if (sharedPreferences.getString("pref_theme", "0").equals("0")) {
             mCurrentTheme = android.R.style.Theme_Holo_Light;
-        else
+        } else
             mCurrentTheme = android.R.style.Theme_Holo;
-
-
         setTheme(mCurrentTheme);
 
         setContentView(R.layout.activity_main);
@@ -138,7 +125,6 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
         // Load Interface Items
         editText_Start = (EditText) findViewById(R.id.editText_Start);
         editText_Span = (EditText) findViewById(R.id.EditText_Span);
-
         clearButton = (ImageButton) findViewById(R.id.imageButton);
         toggleButton = new ToggleButton[9];
         toggleButton[0] = (ToggleButton) findViewById(R.id.ToggleButton01);
@@ -152,9 +138,89 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
         toggleButton[8] = (ToggleButton) findViewById(R.id.ToggleButton09);
         listView = (ListView) findViewById(R.id.listView1);
 
-        //Load Button Text
-        //TODO: Finish this!
+        // Load ArrayList
+        addressList = new ArrayList<Integer>();
+
+        // Load Fonts
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/RobotoSlab-Regular.ttf");
+
+        // Setup Fonts
+        editText_Start.setTypeface(tf);
+        editText_Span.setTypeface(tf);
+        for (int i = 0; i < ADDRESS_BUTTONS; i++)
+            toggleButton[i].setTypeface(tf);
+
+        //Setup setHapticFeedbackEnabled
+        vib = (Vibrator) this.getSystemService(Service.VIBRATOR_SERVICE);
+
+        // Events
+        editText_Start.addTextChangedListener(this);
+        editText_Span.addTextChangedListener(this);
+        clearButton.setOnClickListener(this);
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
+            }
+        });
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+                if (i != SCROLL_STATE_IDLE) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v("lifeCycle", "onStart");
+
+        // Load ArrayAdapter
+        arrayAdapter = new DMXAdapter(this, addressList);
+
+        //Assign ArrayAdapter to listView
+        listView.setAdapter(arrayAdapter);
+
+        //TODO: Make these the correct type, and make a pref class to take care of all of this.
+        String pref_vib = sharedPreferences.getString("pref_vib", "0");
         String pref_addr = sharedPreferences.getString("pref_addr", "0");
+        String pref_offset2 = sharedPreferences.getString("pref_offset2", "0");
+
+        if (pref_offset2.equals("0")) {
+            mOffset = false;
+            mLastAddress = 511;
+            arrayAdapter.setOffset(mOffset);
+        } else {
+            mOffset = true;
+            mLastAddress = 512;
+            arrayAdapter.setOffset(mOffset);
+        }
+
+        int pref_start = sharedPreferences.getInt("pref_start", mFirstAddress);
+        int pref_span = sharedPreferences.getInt("pref_span", 1);
+
+
+        // Load Vibration from preferences
+        if (pref_vib.equals("0"))
+            VIB_TIME = 10;
+        else if (pref_vib.equals("1"))
+            VIB_TIME = 30;
+        else if (pref_vib.equals("2"))
+            VIB_TIME = 90;
+
+        //Load Button Text
         if (pref_addr.equals("1")) {
             for (int i = 0; i < ADDRESS_BUTTONS; i++) {
                 toggleButton[i].setText(getString(BUTTON_TEXT_ADDR[i]));
@@ -171,55 +237,39 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
             }
         }
 
-        // Load ArrayList
-        addressList = new ArrayList<Integer>();
-
-        // Load ArrayAdapter
-        arrayAdapter = new DMXAdapter(this, addressList);
-
-        //Assign ArrayAdapter to listView
-        listView.setAdapter(arrayAdapter);
-
-        // Load Fonts
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/RobotoSlab-Regular.ttf");
-
-        // Setup Fonts
-        editText_Start.setTypeface(tf);
-        editText_Span.setTypeface(tf);
-        for (int i = 0; i < ADDRESS_BUTTONS; i++) {
-            toggleButton[i].setTypeface(tf);
-        }
-
-        //Setup setHapticFeedbackEnabled
-        vib = (Vibrator) this.getSystemService(Service.VIBRATOR_SERVICE);
-
-        // Events
-        editText_Start.addTextChangedListener(this);
-        editText_Span.addTextChangedListener(this);
-        clearButton.setOnClickListener(this);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
-            }
-        });
-
-        int pref_start = sharedPreferences.getInt("pref_start", -1);
-        int pref_span = sharedPreferences.getInt("pref_span", -1);
-        if ((pref_span == -1) || (pref_span == 1))
+        // Span
+        if (pref_span == 1)
             editText_Span.setText("");
         else
             editText_Span.setText(Integer.toString(pref_span));
 
-        if ((pref_start == -1) || (pref_start == 0))
+        // Start
+        if (pref_start <= mFirstAddress) {
             editText_Start.clearComposingText();
-        else
+        } else {
             editText_Start.setText(Integer.toString(pref_start));
-
-        this.updateButtons(pref_start);
+        }
+        mSkipProcess = false;
+        this.updateButtons(pref_start, mOffset);
         this.buildChart(pref_start, pref_span);
+
+
+//------- ALL OF THE BELOW IS JUNK?
+//        String pref_theme = sharedPreferences.getString("pref_theme", "0");
+//        int newTheme;
+//        if (pref_theme.equals("0"))
+//            newTheme = android.R.style.Theme_Holo_Light;
+//        else
+//            newTheme = android.R.style.Theme_Holo;
+
+//        if (mCurrentTheme != newTheme){
+//            Intent activity = new Intent(this,this.getClass());
+//            this.startActivity(activity);
+//            this.finish();
+//            //return;
+//        }
     }
+
 
     @Override
     protected void onPause() {
@@ -243,25 +293,6 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
         editText_Start.setText(savedInstanceState.get("start").toString());
         super.onRestoreInstanceState(savedInstanceState);
         //}
-    }
-
-    @Override
-    protected void onStart() {
-        Log.v("lifeCycle", "onStart");
-//        String pref_theme = sharedPreferences.getString("pref_theme", "0");
-//        int newTheme;
-//        if (pref_theme.equals("0"))
-//            newTheme = android.R.style.Theme_Holo_Light;
-//        else
-//            newTheme = android.R.style.Theme_Holo;
-
-//        if (mCurrentTheme != newTheme){
-//            Intent activity = new Intent(this,this.getClass());
-//            this.startActivity(activity);
-//            this.finish();
-//            //return;
-//        }
-        super.onStart();
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -338,11 +369,11 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
 
         // Clear Button Presses
         switch (v.getId()) {
-            case R.id.imageButton:                //Clear Button
+            case R.id.imageButton:              //Clear Button
                 vib.vibrate(VIB_TIME);
-                mClearPressed = true;                // don't build chart twice on clear.
+                mSkipProcess = true;            // don't build chart twice on clear.
                 editText_Start.setText("");
-                mClearPressed = false;
+                mSkipProcess = false;
                 editText_Span.setText("");
                 break;
             case R.id.ToggleButton01:
@@ -356,59 +387,66 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
             case R.id.ToggleButton09:
                 vib.vibrate(VIB_TIME);
                 if (toggleButton[0].isChecked())
-                    start = start + 1;
+                    start += 1;
                 if (toggleButton[1].isChecked())
-                    start = start + 2;
+                    start += 2;
                 if (toggleButton[2].isChecked())
-                    start = start + 4;
+                    start += 4;
                 if (toggleButton[3].isChecked())
-                    start = start + 8;
+                    start += 8;
                 if (toggleButton[4].isChecked())
-                    start = start + 16;
+                    start += 16;
                 if (toggleButton[5].isChecked())
-                    start = start + 32;
+                    start += 32;
                 if (toggleButton[6].isChecked())
-                    start = start + 64;
+                    start += 64;
                 if (toggleButton[7].isChecked())
-                    start = start + 128;
+                    start += 128;
                 if (toggleButton[8].isChecked())
-                    start = start + 256;
+                    start += 256;
+                if (mOffset)
+                    start += 1;
                 editText_Start.setText(String.valueOf(start));
         }
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        int start = 0;
+        Log.v("afterTextChanged", s.toString());
+        int start = mFirstAddress;
         int span = 1;
-        if (mClearPressed)
-            return;
+
         // Check Start has a length
         if (editText_Start.length() != 0) {
-            //if greater the 511 make it 511
-            if (Integer.parseInt(editText_Start.getText().toString()) > 511) {
-                editText_Start.setText("511");
+            int currentStart = Integer.parseInt(editText_Start.getText().toString());
+            //if greater then last then make it that.
+            if (currentStart > mLastAddress) {
+                editText_Start.setText(Integer.toString(mLastAddress));
                 editText_Start.selectAll();
             }
+            if (currentStart < mFirstAddress)
+                editText_Start.setText(Integer.toString(mFirstAddress));
             start = Integer.parseInt(editText_Start.getText().toString());
         }
 
         // Check Span has a length
         if (editText_Span.length() != 0) {
-            if (Integer.parseInt(editText_Span.getText().toString()) > 511) {
+            int currentSpan = Integer.parseInt(editText_Span.getText().toString());
+            if (currentSpan > 511) {
                 editText_Span.setText("511");
                 editText_Span.selectAll();
             }
-            if (Integer.parseInt(editText_Span.getText().toString()) == 0) {
+            if (Integer.parseInt(editText_Span.getText().toString()) <= 0) {
                 editText_Span.setText("1");
                 editText_Span.selectAll();
             }
-
             span = Integer.parseInt(editText_Span.getText().toString());
         }
 
+        if (mSkipProcess)
+            return;
         Log.v("input", "start.count:" + start + "." + span);
-        this.updateButtons(start);
+        this.updateButtons(start, mOffset);
         this.buildChart(start, span);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("pref_start", start);
@@ -425,9 +463,11 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
     public void onTextChanged(CharSequence s, int start, int before, int count) {
     }
 
-    public void updateButtons(int start) {
-
+    public void updateButtons(int start, boolean offset) {
         final int length = 9;
+
+        if (offset)
+            start -= 1;
 
         String bin = swapBin(start, length);
 
@@ -443,6 +483,7 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
     }
 
     public void buildChart(int start, int span) {
+
         //Clear the list
         addressList.clear();
 
@@ -461,7 +502,7 @@ public class MainActivity extends Activity implements OnClickListener, TextWatch
 //			e1.printStackTrace();
 //		}
         Log.v("buildChart", "---" + start + "." + span + "---");
-        for (int i = start; i < 512; i = i + span) {
+        for (int i = start; i <= mLastAddress; i = i + span) {
             addressList.add(i);
 //			try {
 //				fileOS.write((i+" : "+swapBin(i, 9)+"\n").getBytes());

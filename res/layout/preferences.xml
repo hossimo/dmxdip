@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
                   android:layout_height="wrap_content">
-    <CheckBoxPreference
-            android:key="pref_offset"
+
+    <ListPreference
+            android:key="pref_offset2"
+            android:defaultValue="0"
+            android:entries="@array/pref_offset_list_titles"
+            android:entryValues="@array/pref_offset_list_values"
             android:title="@string/pref_offset"
-            android:summary="@string/pref_offset_summary"
-            android:defaultValue="false"/>
+            android:summary="@string/pref_offset_summary"/>
+
     <ListPreference
             android:defaultValue="0"
             android:entries="@array/pref_vib_list_titles"
